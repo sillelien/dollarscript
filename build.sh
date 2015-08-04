@@ -18,7 +18,7 @@ fi
 set -u
 rm -rf ~/.dollar/typelearning.*
 mvn -T 1C -Dmaven.test.skip=true -Drat.skip=true  -Dmaven.javadoc.skip=true -DgenerateReports=false install
-mvn -Dgpg.passphrase=${GPG_PASSPHRASE} -T 2C deploy site:site site:stage
+mvn -T 2C site:site site:stage
 cd -
 ./build-docs.sh
 ./pack/pack.sh
