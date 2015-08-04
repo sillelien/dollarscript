@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2014 Neil Ellis
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dollar</title>
+    <description>DollarScript and the DollarAPI - getting things done on the JVM.
+</description>
+    <link>http://neilellis.github.io//dollar//</link>
+    <atom:link href="http://neilellis.github.io//dollar//feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Tue, 04 Aug 2015 22:52:47 +0100</pubDate>
+    <lastBuildDate>Tue, 04 Aug 2015 22:52:47 +0100</lastBuildDate>
+    <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>A heuristic statistical approach to a type system for a dynamic language</title>
+        <description>&lt;p&gt;A common complaint about dynamic languages is the lack of type safety, and that the only solution is a complete formal one. Interestingly there really does seem to be a very binary view about type systems. So let’s get to the bottom of that before we discuss the heuristic approach.&lt;/p&gt;
+
+&lt;p&gt;Static typing is largely a good thing because it helps us to spot bugs before our code goes into production and reduces (in theory) the amount of unit testing required to find bugs. The received wisdom is that unless you use a formally proven post-doctorate level type system then your code is sloppy and weak. In reality this is a complex subject within a huge terrain of possible solutions and that many answers are appropriate for many different situations.&lt;/p&gt;
+
+&lt;p&gt;The problem with the simple binary viewpoint is that it does not actually allow for trade off of the extra work involved in maintaining a type system and therefore in getting it’s rewards. This extra effort if used in systems that require minimal type safety can cause less experienced developers to try and throw the baby out with the bathwater - and stick to only using languages with a very loose type system. I think this somewhat illusory dichotomy can be removed or weakened with the application of a metaphor of real world contracts.&lt;/p&gt;
+
+&lt;p&gt;If I lend my friend £20 there is an implied contract that she will return that money by her next paycheck. If she doesn’t then my trust in her is weakened but hey I’m only down £20.  However if I then went to court over my £20 (like I would!) I have nothing but my word to rely upon. This is the level of type safety we would find in, say, JavaScript. Most of the time it works - there’s little consequence (in the browser!) if it doesn’t and it’s a quick simple friendly solution that doesn’t slow people’s lives down.&lt;/p&gt;
+
+&lt;p&gt;Now let’s go to the other extreme.&lt;/p&gt;
+
+&lt;p&gt;I am writing a contract between two multinational corporations for about 3 squidgillion dollars. If I make a mistake my job, career and possibly the jobs and careers at my entire company could be at stake. So I write a contract with a team of a 50 lawyers and produce a 200 page contract which absolutely nobody but a corporate lawyer understands. However there is pretty much no way anyone could wriggle out of that contract. This is the land of formal languages and languages with advanced type systems like Haskell.&lt;/p&gt;
+
+&lt;p&gt;Now what interests me is that there is a &lt;em&gt;huge&lt;/em&gt; gap in between, a vast spectrum of possibilities. Contracts for car hire, EULAs, privacy policies, employment contracts and so forth. In these cases I do want some formality to protect myself - because these people aren’t close friends that I trust and the consequences can be expensive. However they need to legible to both parties without a team of 50 specialist lawyers because, hey we have other things to do in our lives.&lt;/p&gt;
+
+&lt;p&gt;Each language, each project and each developer puts there stake in the ground as to how much or little type safety they want. For wiser, older developers this is usually an educated trade off - for the rest it’s a flame war over languages and religious technical beliefs.&lt;/p&gt;
+
+&lt;p&gt;So where does &lt;a href=&quot;http://neilellis.github.io/dollar&quot;&gt;DollarScript&lt;/a&gt; lie on this continuum? Well I’m taking a fairly radical approach and allowing the type system to learn from experience.&lt;/p&gt;
+
+&lt;p&gt;Heh?&lt;/p&gt;
+
+&lt;p&gt;DollarScript learns from runtime usage what types are usually returned from expressions, modules, resources etc. for any given set of inputs. It then warns you if your code depends on a type that in all probability is wrong. The huge advantage of this approach is that you get a lot of the type safety of a statically typed language without the constant fussing around with importing type declarations from external resources. It also means that type safety can be applied in places that a static type system cannot calculate the type - i.e. from an external service.&lt;/p&gt;
+
+&lt;p&gt;We’re not enforcing a type system, just warning you if you appear to be breaching it. This gives 98% of the result for 2% of the effort.&lt;/p&gt;
+
+&lt;p&gt;To go back to our analogy - this is saying that our contracts are based on what other people are currently using as contracts. We’re taking a calculated risk that those borrowed contracts may be flawed but we’re getting the vast majority of the safety for a fraction of the cost/effort.&lt;/p&gt;
+
+&lt;p&gt;So here is this in action:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;1+2&amp;quot;&lt;/span&gt;
+// this is never executed but we will get a &lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;warning &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; it anyway
+// during the initial parse phase. The error will be &lt;span class=&quot;s1&quot;&gt;&amp;#39;Type assertion may fail,&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;// expected INTEGER most likely type is STRING (100%)&amp;#39;&lt;/span&gt;.
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &amp;lt;Integer&amp;gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; + i
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The above example is really too over simplified to be useful (better ones to come) but it does illustrate the principle that static analysis is being performed - and that analysis is based on past experience. In this case the experience of what happens when a String is added to an Integer. The &lt;code&gt;&amp;lt;Integer&amp;gt;&lt;/code&gt; represents a type assertion during assignment.&lt;/p&gt;
+
+&lt;p&gt;Of course the above example could easily be hardcoded into the language, but what if &lt;code&gt;i&lt;/code&gt; came from an external service? Or a function from a separate module? Without a reasonable degree of type annotation the type system would quickly weaken. DollarScript avoids this by using a statistical approach to predicting the type from previous runtime usage.&lt;/p&gt;
+
+&lt;p&gt;If I can emphasize this a little further, a type system is like the &lt;a href=&quot;http://en.wikipedia.org/wiki/Travelling_salesman_problem&quot;&gt;Travelling Salesperson Problem&lt;/a&gt;, that is, a complete formal solution with 100% accuracy is extremely (in that case NP) hard, yet the 98% solution is relatively fast and simple to achieve.&lt;/p&gt;
+
+&lt;p&gt;The actual prediction mechanism in DollarScript is pluggable - allowing for anything from simple statistics to machine learning to be used to increase the accuracy of predictions. Naturally in later versions of DollarScript this mechanism will be switched off outside of development environments.&lt;/p&gt;
+
+&lt;p&gt;I know this an incredibly brief introduction - but I really wanted to get some early thoughts and feedback (please no religious feedback, thanks - your chosen programming language is great - keep using it!).&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 22 Dec 2014 11:23:00 +0000</pubDate>
+        <link>http://neilellis.github.io//dollar//dollar/socketio/type/type-safety/predictive/2014/12/22/typesafety.html</link>
+        <guid isPermaLink="true">http://neilellis.github.io//dollar//dollar/socketio/type/type-safety/predictive/2014/12/22/typesafety.html</guid>
+        
+        
+        <category>dollar</category>
+        
+        <category>socketio</category>
+        
+        <category>type</category>
+        
+        <category>type-safety</category>
+        
+        <category>predictive</category>
+        
+      </item>
+    
+      <item>
+        <title>Reactive chat server in 3 lines, explained</title>
+        <description>&lt;p&gt;It’s good to be wary about 3 line code, &lt;strong&gt;wow&lt;/strong&gt; examples. But it’s hard not to want to show off the reactive aspects of DollarScript, so here goes:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; socketio://127.0.0.1:8092/bulletin?eventType&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;chatevent
+message *&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; server
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;chatevent&amp;quot;&lt;/span&gt; : message&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; publish server&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s break it down.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; socketio://127.0.0.1:8092/bulletin?eventType&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;chatevent&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This simply sets the variable server to be the url of the server we’re going to create. The important parts are the hostname, socket and the type of event we’re interested in - in this case &lt;code&gt;chatevent&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;message *&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; server&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we have the magic, the &lt;code&gt;*=&lt;/code&gt; is the subscriptive assignment operator. This is essential syntactic sugar to say subscribe to server and when a new value is available assign it to message.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;chatevent&amp;quot;&lt;/span&gt; : message&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; publish server&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Finally we have the reactive part. The first thing we do is create a ‘pair’, a pair is a map with a single key/value entry created using &lt;code&gt;:&lt;/code&gt;. The key is the type of event we are going to send, the value is the actual message itself. Because we have the variable &lt;code&gt;message&lt;/code&gt; in this expression any change to &lt;code&gt;message&lt;/code&gt; will cause the expression to be re-evaluated causing the pair to be published using the &lt;code&gt;publish&lt;/code&gt; operator to our previously defined &lt;code&gt;server&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;And that my friends is it. It’s obviously a very simple example, however I feel it amply illustrates the value of the reactive side of Dollar.&lt;/p&gt;
+
+&lt;p&gt;This is a &lt;a href=&quot;https://github.com/neilellis/dollar/blob/master/dollar-examples/src/main/resources/bulletin.ds&quot;&gt;working example&lt;/a&gt;, you’ll also need the &lt;a href=&quot;https://github.com/neilellis/dollar/blob/master/dollar-examples/src/main/webapp/index.html&quot;&gt;client code&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Wed, 10 Dec 2014 12:23:00 +0000</pubDate>
+        <link>http://neilellis.github.io//dollar//dollar/socketio/examples/2014/12/10/socketio.html</link>
+        <guid isPermaLink="true">http://neilellis.github.io//dollar//dollar/socketio/examples/2014/12/10/socketio.html</guid>
+        
+        
+        <category>dollar</category>
+        
+        <category>socketio</category>
+        
+        <category>examples</category>
+        
+      </item>
+    
+      <item>
+        <title>Supporting functional programming, the &#39;pure&#39; operator</title>
+        <description>&lt;p&gt;Support for functional programming is now included in DollarScript, this will be widened as the language is developed. For now it is provided by the &lt;code&gt;pure&lt;/code&gt; operator. This signals that an expression or declaration is a pure expression or function.&lt;/p&gt;
+
+&lt;p&gt;In this example we’re declaring reverse to be an expression that reverses two values from a supplied array. Because we declare it as &lt;code&gt;pure&lt;/code&gt; the expression supplied must also be &lt;code&gt;pure&lt;/code&gt;. To understand what a pure function is please read the &lt;a href=&quot;http://en.wikipedia.org/wiki/Pure_function&quot;&gt;Wikipedia&lt;/a&gt; entry. Basically it prohibits the reading of external state or the setting of external state. We next swap &lt;code&gt;[2,1]&lt;/code&gt; within a newly created pure expression, which is subsequently assigned to &lt;code&gt;a&lt;/code&gt;. If reverse had not been declared pure it would not be allowed within the pure expression.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;pure reverse :&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;,&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;
+
+ &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; pure &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+     reverse&lt;span class=&quot;o&quot;&gt;([&lt;/span&gt;2,1&lt;span class=&quot;o&quot;&gt;])&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Note some builtin functions are not themselves pure and will trigger parser errors if you attempt to use them in a pure expression. Take &lt;code&gt;DATE()&lt;/code&gt; for example which supplies an external state (the computers clock).&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 08 Dec 2014 23:59:00 +0000</pubDate>
+        <link>http://neilellis.github.io//dollar//dollar/functional/pure/2014/12/08/pure.html</link>
+        <guid isPermaLink="true">http://neilellis.github.io//dollar//dollar/functional/pure/2014/12/08/pure.html</guid>
+        
+        
+        <category>dollar</category>
+        
+        <category>functional</category>
+        
+        <category>pure</category>
+        
+      </item>
+    
+      <item>
+        <title>Dollar 0.1.0 - experimental release!</title>
+        <description>&lt;p&gt;The 0.1.0 experimental release of DollarScript is ready to download &lt;a href=&quot;https://bintray.com/neilellis/dollar/dollarscript/_latestVersion&quot;&gt; &lt;img src=&quot;https://api.bintray.com/packages/neilellis/dollar/dollarscript/images/download.svg&quot; alt=&quot;Download&quot; /&gt; &lt;/a&gt;. This release is just to give you a taste of what Dollar is all about and to encourage hackers to feedback on language features.&lt;/p&gt;
+
+&lt;p&gt;Please let me know of bugs, ideas etc. I’m @neilellis on Twitter or email hello@neilellis.me - good luck!&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 01 Dec 2014 16:24:44 +0000</pubDate>
+        <link>http://neilellis.github.io//dollar//dollar/releases/2014/12/01/release-0.1.0.html</link>
+        <guid isPermaLink="true">http://neilellis.github.io//dollar//dollar/releases/2014/12/01/release-0.1.0.html</guid>
+        
+        
+        <category>dollar</category>
+        
+        <category>releases</category>
+        
+      </item>
+    
+  </channel>
+</rss>
