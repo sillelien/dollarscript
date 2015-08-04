@@ -18,6 +18,8 @@ dependencies:
   override:
       - sudo -H pip install docker-compose
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - echo "login=neilellis" > ~/.github
+      - echo "password=${GITHUB_PASSWORD}" >> ~/.github
       - ./build.sh
 
 test:
