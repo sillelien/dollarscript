@@ -39,14 +39,14 @@ deployment:
   production:
       branch: master
       commands:
-          - cd kong && docker build -t sillelien/docker-kong:$(cat .release) .
-          - docker push sillelien/docker-kong:${release}
-          - cd kong && docker build -t sillelien/docker-kong .
-          - docker push sillelien/docker-kong
+          - cd kong && docker build -t sillelien/dollarscript:$(cat .release) .
+          - docker push sillelien/dollarscript:${release}
+          - cd kong && docker build -t sillelien/dollarscript .
+          - docker push sillelien/dollarscript
 
 
   development:
       branch: dev
       commands:
-          - cd kong && docker build -t sillelien/docker-kong:dev .
-          - docker push sillelien/docker-kong:dev
+          - cd kong && docker build -t sillelien/dollarscript:dev .
+          - docker push sillelien/dollarscript:dev

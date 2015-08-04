@@ -1,23 +1,23 @@
 #!/bin/bash -eux
-cd $(dirname $0)/dollar
+cd $(dirname $0)/../dollar
 
-[ -d ../dist ] && rm -rf ../dist || :
-dist=../dist/dollar
+[ -d ./dist ] && rm -rf ./dist || :
+dist=./dist/dollar
 [ -d ${dist}/plugins ] || mkdir -p ${dist}/plugins
-jar=$(ls ../dollar-runtime/target/dollar-runtime*-mod.jar)
+jar=$(ls ./dollar-runtime/target/dollar-runtime*-mod.jar)
 
 mkdir -p ${dist}
 
-for pd in $(ls ../dollar-plugins)
+for pd in $(ls ./dollar-plugins)
 do
-    if [ -d ../dollar-plugins/${pd}/target ]
+    if [ -d ./dollar-plugins/${pd}/target ]
     then
-        cp -f ../dollar-plugins/${pd}/target/*plugin.jar ${dist}/plugins
+        cp -f ./dollar-plugins/${pd}/target/*plugin.jar ${dist}/plugins
     fi
 done
 
-cp -r ../dist-skel/common/* ${dist}
-cp ../LICENSE ../README.md ${dist}
+cp -r ./dist-skel/common/* ${dist}
+cp ../LICENSE ./README.md ${dist}
 mkdir ${dist}/lib
 cp ${jar} ${dist}/lib
 cp -f ~/.m2/repository/org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar ${dist}/lib
