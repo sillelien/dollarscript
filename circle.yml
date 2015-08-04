@@ -19,6 +19,7 @@ dependencies:
 
   override:
       - sudo -H pip install docker-compose
+      - sudo gem install jekyll
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - echo "login=neilellis" > ~/.github
       - echo "password=${GITHUB_PASSWORD}" >> ~/.github
