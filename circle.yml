@@ -3,6 +3,8 @@ machine:
     - docker
   environment:
     release: 0.4.${CIRCLE_BUILD_NUM}
+    MAVEN_OPTS: "-Xmx1g -DbuildNumber=${CIRCLE_BUILD_NUM} "
+
   java:
     version: oraclejdk8
 
@@ -20,6 +22,7 @@ dependencies:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - echo "login=neilellis" > ~/.github
       - echo "password=${GITHUB_PASSWORD}" >> ~/.github
+      - cd ~ && git clone https://github.com/sillelien/build-utils.git && chmod a+x ~/build-utils/*.sh
       - ./build.sh
 
 test:
@@ -30,27 +33,13 @@ deployment:
   staging:
       branch: staging
       commands:
-        - git config --global user.email "hello@neilellis.me"
-        - git config --global user.name "Neil Ellis"
-        - git reset HEAD --hard
-        - git clean -fd
-        - git checkout master
-        - git pull
-        - git merge staging -m "Auto merge"
-        - git push
-        - echo ${release} > .release
-        - envsubst < README.md > README.expanded
-        - mv README.expanded README.md
-        - 'git commit -a -m "Promotion from staging" || :'
-        - "git tag ${release} || :"
-        - git push --tags
-        - git push origin master
+         - ~/build-utils/promote_from_staging.sh
 
   production:
       branch: master
       commands:
           - cd kong && docker build -t sillelien/dollarscript:$(cat .release) .
-          - docker push sillelien/dollarscript:${release}
+          - docker push sillelien/dollarscript:${RELEASE}
           - cd kong && docker build -t sillelien/dollarscript .
           - docker push sillelien/dollarscript
 
