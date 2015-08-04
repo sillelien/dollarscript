@@ -5,7 +5,7 @@ DIR=$(pwd)
 [ ! -d dist ] || rm -rf dist
 mkdir dist
 cd dist
-git clone git@github.com:sillelien/dollar.git docs
+git clone git@github.com:sillelien/dollarscript.git docs
 cd docs
 git checkout gh-pages
 cd $DIR/dollar-docs/src/main/webapp/
@@ -17,7 +17,7 @@ cd $DIR
 mvn -q install exec:java -e -pl com.sillelien:dollar-docs -Dexec.mainClass="com.sillelien.dollar.docs.ParseDocs" -Dexec.args="./dist/docs"
 cd dist/docs
 git add *
-git commit -a -m "Updated docs from build"  || :
+git commit -a -m "Docs for release ${release:-snapshot}"  || :
 git push || :
 cd -
 
