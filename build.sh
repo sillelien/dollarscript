@@ -18,6 +18,7 @@ fi
 set -u
 rm -rf ~/.dollar/typelearning.*
 mvn -e -T 1C -Dmaven.test.skip=true -Drat.skip=true  -Dmaven.javadoc.skip=true -DgenerateReports=false install
+#TODO remove the || : bodge operator
 mvn -e site:site site:stage || :
 cd -
 ./build-docs.sh
