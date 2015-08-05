@@ -42,7 +42,7 @@ deployment:
       branch: master
       commands:
           - docker build -t sillelien/dollarscript:$(cat ../.release) .
-          - docker push sillelien/dollarscript:${RELEASE}
+          - docker push sillelien/dollarscript:$(cat ../.release)
           - docker build -t sillelien/dollarscript .
           - docker push sillelien/dollarscript
 
