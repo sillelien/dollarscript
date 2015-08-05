@@ -17,8 +17,8 @@ fi
 
 set -u
 rm -rf ~/.dollar/typelearning.*
-mvn -T 1C -Dmaven.test.skip=true -Drat.skip=true  -Dmaven.javadoc.skip=true -DgenerateReports=false install
-mvn site:site site:stage
+mvn -e -T 1C -Dmaven.test.skip=true -Drat.skip=true  -Dmaven.javadoc.skip=true -DgenerateReports=false install
+mvn -e site:site site:stage
 cd -
 ./build-docs.sh
 ./pack/pack.sh
