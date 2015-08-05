@@ -12,13 +12,13 @@ then
     git checkout $CIRCLE_BRANCH
 else
     echo "Building from master"
-    git checkout staging
+    git checkout master
 fi
 
 set -u
 rm -rf ~/.dollar/typelearning.*
 mvn -e -T 1C -Dmaven.test.skip=true -Drat.skip=true  -Dmaven.javadoc.skip=true -DgenerateReports=false install
-mvn -e site:site site:stage
+mvn -e site:site site:stage || :
 cd -
 ./build-docs.sh
 ./pack/pack.sh
