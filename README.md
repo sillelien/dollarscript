@@ -1,5 +1,7 @@
 [Documentation Site](http://sillelien.github.io/dollarscript/)
 
+Download latest distribution from http://sillelien-maven-repo/dist/dollarscript/dollarscript-${RELEASE:-snapshot}.tgz
+
 [![Docker Registry](https://img.shields.io/docker/pulls/sillelien/dollarscript.svg)](https://registry.hub.docker.com/u/sillelien/dollarscript)
 
 [![Image Layers](https://badge.imagelayers.io/sillelien/dollarscript.svg)](https://imagelayers.io/?images=sillelien/dollarscript:latest 'Get your own badge on imagelayers.io') 
