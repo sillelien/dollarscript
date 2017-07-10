@@ -17,8 +17,8 @@ git pull
 ./build.sh
 cd -
 cd windows
-docker build -t  sillelien-docker-docker.bintray.io/dollarscript:${RELEASE:-dev}-windows
+docker build -t  sillelien-docker-docker.bintray.io/dollarscript-windows:${RELEASE:-dev}
 cd -
 cd headless
-docker build -t  sillelien-docker-docker.bintray.io/dollarscript:${RELEASE:-dev}-headless
+docker build -t  sillelien-docker-docker.bintray.io/dollarscript-headless:${RELEASE:-dev}
 cd -
