@@ -1,10 +1,9 @@
 #!/bin/bash -ex
 cd $(dirname $0)
-if [ -d dollar ]
+if [ ! -d dollar ]
 then
-    rm -rf dollar
+    git clone https://github.com/sillelien/dollar.git
 fi
-git clone https://github.com/sillelien/dollar.git
 cd dollar
 if [ -n "$CIRCLE_BRANCH" ]
 then
@@ -14,12 +13,12 @@ else
     echo "Building from master"
     git checkout master
 fi
-
-set -u
-rm -rf ~/.dollar/typelearning.*
-mvn -e -T 1C -Dmaven.test.skip=true -Drat.skip=true  -Dmaven.javadoc.skip=true -DgenerateReports=false install
-#TODO remove the || : bodge operator
-mvn -e -Dorg.xml.sax.driver=com.sun.org.apache.xerces.internal.parsers.SAXParser site:site site:stage || :
+git pull
+./build.sh
 cd -
-./build-docs.sh
-./pack/pack.sh
+cd windows
+docker build -t  sillelien-docker-docker.bintray.io/dollarscript:${RELEASE:-dev}-windows
+cd -
+cd headless
+docker build -t  sillelien-docker-docker.bintray.io/dollarscript:${RELEASE:-dev}-headless
+cd -

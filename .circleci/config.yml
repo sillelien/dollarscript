@@ -1,0 +1,51 @@
+jobs:
+    build:
+      docker:
+        - image: sillelien/circleci-dollar-build-image
+
+      environment:
+        MAJOR_VERSION: 0.3
+
+      working_directory: ~/dollar
+
+      branches:
+        ignore:
+          - gh-pages
+
+      steps:
+
+        - checkout
+
+        - restore_cache:
+            key: dependency-cache
+
+        - run:
+            name: dependencies
+            command: |
+              cd ~ && git clone https://github.com/sillelien/build-utils.git && chmod a+x ~/build-utils/*.sh && cd -
+
+        - save_cache:
+            key: dependency-cache
+            paths:
+                - ~/.gnupg
+                - ~/.m2
+        - run:
+            name: test
+            command: |
+                 mvn -q -T 1C -Drat.skip -Dsource.skip=true -DgenerateReports=false -Dmaven.javadoc.skip=true install
+            no_output_timeout: 600
+
+        - run:
+            name: build
+            command: |
+                ./build.sh
+
+        - deploy:
+            command: |
+              if [ "${CIRCLE_BRANCH}" == "staging" ]; then
+                      sudo apt-get -y install gettext-base
+                      ~/build-utils/promote_from_staging.sh
+              fi
+              if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                      ./deploy.sh
+              fi
